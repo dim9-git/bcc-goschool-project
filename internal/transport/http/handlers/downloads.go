@@ -104,6 +104,23 @@ func (h *HTTPHandlers) GetDownloadJob(w http.ResponseWriter, r *http.Request) {
 		Status: job.Status.String(),
 		Files:  make([]fileDTO, len(job.Items)),
 	}
+	for i, item := range job.Items {
+		var errDTO *struct {
+			Code string `json:"code"`
+		}
+		if item.Error != nil {
+			errDTO = &struct {
+				Code string `json:"code"`
+			}{
+				Code: string(item.Error.Code),
+			}
+		}
+		respObject.Files[i] = fileDTO{
+			URL:    item.URL,
+			FileID: item.FileID,
+			Error:  errDTO,
+		}
+	}
 
 	if err := json.NewEncoder(w).Encode(respObject); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
