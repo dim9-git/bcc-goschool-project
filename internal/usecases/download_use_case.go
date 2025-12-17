@@ -115,6 +115,11 @@ func (u *DownloadUseCase) StartJob(urls []string, duration time.Duration) (entit
 		case res := <-resCh:
 			if res.err != nil && res.fileID == "" {
 				createdJob.Items = append(createdJob.Items, entity.DownlaodItem{
+					URL:   urls[i],
+					Error: &entity.DownloadItemError{Code: entity.ErrorUnknown},
+				})
+			} else if res.fileID != "" {
+				createdJob.Items = append(createdJob.Items, entity.DownlaodItem{
 					URL:    urls[i],
 					FileID: res.fileID,
 				})
