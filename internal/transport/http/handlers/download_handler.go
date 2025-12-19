@@ -3,7 +3,9 @@ package handlers
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
+	pkgerrors "gin-quickstart/pkg/errors"
 	"io"
 	"net/http"
 	"strconv"
@@ -32,6 +34,10 @@ func (req *createDownloadJobReq) Validate() error {
 		validation.Field(&req.Files, validation.Required),
 		validation.Field(&req.Timeout, validation.Required),
 	); err != nil {
+		var ve validation.Errors
+		if errors.As(err, &ve) {
+			return pkgerrors.NewValidationErrorFromOzzo(ve)
+		}
 		return err
 	}
 	return nil

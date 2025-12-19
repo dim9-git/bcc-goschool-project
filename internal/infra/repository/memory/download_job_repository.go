@@ -59,7 +59,7 @@ func (m *DownloadJobMemoryRepository) Get(ctx context.Context, id string) (entit
 
 	job, exists := m.jobs[id]
 	if !exists {
-		return entity.DownloadJob{}, fmt.Errorf("GET:Job not found for ID: %s", id)
+		return entity.DownloadJob{}, fmt.Errorf("GET: Job not found for ID: %s", id)
 	}
 	return cloneJob(job), nil
 }
